@@ -1,16 +1,19 @@
-In Application properties set your own twitter api credentials: 
+In application.properties set your own twitter api credentials: 
 
 twitter4j.oauth.consumerKey=
-twitter4j.oauth.consumerSecret=
+
+twitter4j.oauth.consumerSecret= 
+
 twitter4j.oauth.accessToken=
+
 twitter4j.oauth.accessTokenSecret=
 
 Package for saagie : sbt clean assembly and get the package in target
 
 To pass args to the program we use scopt. Scopt is a little command line options parsing library.
 
---hdfsMaster: namenode url hdfs
---filters: filter predicates for tweets
+* --hdfsMaster: namenode url hdfs
+* --filters: filter predicates for tweets
 
 Usage in local :
 
