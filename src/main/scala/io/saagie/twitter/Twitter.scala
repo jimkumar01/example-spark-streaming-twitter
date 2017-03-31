@@ -6,6 +6,7 @@ package io.saagie.twitter
 
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.SparkConf
+import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.twitter._
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.slf4j.LoggerFactory
@@ -44,20 +45,14 @@ object Twitter {
 
         val ssc = new StreamingContext(sparkConf, Seconds(10))
 
+
+        val x = ssc.sparkContext.parallelize(Array(1, 2, 3))
+        x.foreach(println(_))
         val stream = TwitterUtils.createStream(ssc, None, params.filters)
 
         val hashTags = stream.flatMap(tweet => tweet.getText.split(" ").filter(_.startsWith("#")))
 
-        val topHashTags = hashTags.map((_, 1))
-          .reduceByKeyAndWindow(_ + _, Seconds(30))
-          .map(_.swap)
-          .transform(
-            _.sortByKey(false)
-              .zipWithIndex
-              .filter(_._2 < 10)
-              .map(_._1)
-          )
-          .map(_.swap)
+        val topHashTags: DStream[(String, Int)] = ???
 
         topHashTags.foreachRDD((rdd, ts) => {
           if (!rdd.partitions.isEmpty) {
